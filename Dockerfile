@@ -10,7 +10,7 @@ COPY job-ingestion/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY job-ingestion/ .
-RUN chmod +x start.sh
+RUN chmod +x start.sh flask_start.sh
 
 ENV PYTHONUNBUFFERED=1
 

@@ -1,10 +1,13 @@
-# Railway service config.
-# In the Railway dashboard set Root Directory to: job-ingestion
+# Railway service config when Root Directory = job-ingestion
+# Streamlit: default CMD (start.sh). Flask: override Start Command to: sh flask_start.sh
 
 [build]
 builder = "dockerfile"
 dockerfilePath = "Dockerfile"
 
 [deploy]
+# Streamlit default. For Flask service use healthcheckPath = "/health" in the dashboard.
+healthcheckPath = "/_stcore/health"
+healthcheckTimeout = 300
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3

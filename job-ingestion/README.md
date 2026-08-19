@@ -83,12 +83,14 @@ Flask profile: `docker compose --profile api up flask`
 
 ## Deploy on Railway
 
+Use **two services** in one Railway project if you want both Streamlit and Flask. Each gets its own free `*.up.railway.app` domain. They do **not** share in-memory job data.
+
+### Service 1 — Streamlit UI
+
 1. Push this repo to GitHub (`ASHISHTOMER0817/acdyon-project`).
 2. Go to [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo**.
-3. Railway builds from the **repo root** by default — root `Dockerfile` + `railway.toml` handle that.
-   - **Or** set **Settings → Root Directory** to `job-ingestion` to use the Dockerfile inside that folder instead.
-4. Railway detects the Dockerfile and builds automatically.
-5. Add **Variables** in the Railway dashboard:
+3. Leave **Root Directory** empty (repo root). Railway uses root `Dockerfile` + `railway.toml`.
+4. Add **Variables**:
 
    | Variable | Required | Example |
    |---|---|---|
@@ -98,8 +100,25 @@ Flask profile: `docker compose --profile api up flask`
    | `DEFAULT_SOURCE_NAME` | No | `remoteok` |
    | `GEMINI_MODEL` | No | `gemini-3.6-flash` |
 
-6. **Settings → Networking → Generate Domain** to get your public URL.
-7. Open the URL in incognito and click **Run ingest**.
+5. **Settings → Networking → Generate Domain** → set target port to **`8080`**.
+6. Open the URL and click **Run ingest**.
+
+Default start command (from Dockerfile): `sh start.sh`
+
+### Service 2 — Flask API
+
+1. In the **same Railway project**: **+ New** → **GitHub Repo** → select the same repo.
+2. Leave **Root Directory** empty (same root `Dockerfile`).
+3. **Settings → Deploy → Start Command**:
+   ```bash
+   sh flask_start.sh
+   ```
+4. **Settings → Deploy → Health Check Path**: `/health`
+5. Add the same **Variables** as Streamlit (`GEMINI_API_KEY`, etc.). Do **not** set `PORT` manually.
+6. **Settings → Networking → Generate Domain** → target port **`8080`**.
+7. Test: `GET https://your-api.up.railway.app/health` and `GET https://your-api.up.railway.app/jobs`
+
+Flask binds to `0.0.0.0` and reads Railway's `PORT` automatically (via `settings.py`).
 
 **Notes for Railway:**
 - Selenium fallback is **not** available in the container (no Chrome). Use public JSON/RSS URLs like RemoteOK.
@@ -110,4 +129,4 @@ Flask profile: `docker compose --profile api up flask`
 1. Use your `https://….up.railway.app` domain — **not** the `External URL` IP from deploy logs.
 2. **Settings → Networking → Public Networking**: ensure a domain exists and the **target port is `8080`** (must match the `PORT` line in deploy logs).
 3. Do **not** set `PORT=8501` in Variables; Railway assigns `8080` automatically.
-4. Health check path should be `/_stcore/health` or `/` — not `/health` (Streamlit has no `/health` route).
+4. Streamlit health check: `/_stcore/health`. Flask health check: `/health`.

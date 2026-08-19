@@ -7,7 +7,7 @@ API keys before running a live ingest.
 
 from functools import lru_cache
 
-from pydantic import Field
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -54,8 +54,13 @@ class Settings(BaseSettings):
     selenium_page_load_timeout: float = 25.0
 
     # --- Flask ---
-    flask_host: str = "127.0.0.1"
-    flask_port: int = 8000
+    # Railway injects PORT; FLASK_PORT overrides when set explicitly.
+    flask_host: str = Field(default="0.0.0.0", description="Bind address (0.0.0.0 for Docker/Railway)")
+    flask_port: int = Field(
+        default=8000,
+        validation_alias=AliasChoices("FLASK_PORT", "PORT"),
+        description="Listen port; Railway sets PORT at runtime",
+    )
     flask_debug: bool = False
 
     @property

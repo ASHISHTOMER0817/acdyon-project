@@ -51,6 +51,10 @@ def main() -> None:
     """`python -m app.api.app` entrypoint."""
     settings = get_settings()
     application = create_app()
+    print(
+        f"Flask listening on {settings.flask_host}:{settings.flask_port}",
+        flush=True,
+    )
     application.run(host=settings.flask_host, port=settings.flask_port, debug=settings.flask_debug)
 
 
