@@ -7,5 +7,8 @@ builder = "dockerfile"
 dockerfilePath = "Dockerfile"
 
 [deploy]
+# Streamlit exposes /_stcore/health (not /health). Wrong path => 502 on the public URL.
+healthcheckPath = "/_stcore/health"
+healthcheckTimeout = 300
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3

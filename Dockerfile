@@ -14,4 +14,5 @@ RUN chmod +x start.sh
 
 ENV PYTHONUNBUFFERED=1
 
-CMD ["./start.sh"]
+# Use sh so the script runs even if shebang/execute bits differ; env vars still apply.
+CMD ["sh", "start.sh"]

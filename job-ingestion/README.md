@@ -105,3 +105,9 @@ Flask profile: `docker compose --profile api up flask`
 - Selenium fallback is **not** available in the container (no Chrome). Use public JSON/RSS URLs like RemoteOK.
 - Job objects live in **process memory** — they reset if the service redeploys or sleeps.
 - Do **not** commit `.env`; set secrets only in Railway Variables.
+
+**If the URL returns 502 or won't load:**
+1. Use your `https://….up.railway.app` domain — **not** the `External URL` IP from deploy logs.
+2. **Settings → Networking → Public Networking**: ensure a domain exists and the **target port is `8080`** (must match the `PORT` line in deploy logs).
+3. Do **not** set `PORT=8501` in Variables; Railway assigns `8080` automatically.
+4. Health check path should be `/_stcore/health` or `/` — not `/health` (Streamlit has no `/health` route).
