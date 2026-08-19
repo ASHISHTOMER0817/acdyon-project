@@ -85,11 +85,9 @@ Flask profile: `docker compose --profile api up flask`
 
 1. Push this repo to GitHub (`ASHISHTOMER0817/acdyon-project`).
 2. Go to [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo**.
-3. Select the repo, then open **Settings → Root Directory** and set:
-   ```
-   job-ingestion
-   ```
-4. Railway detects `Dockerfile` + `railway.toml` and builds automatically.
+3. Railway builds from the **repo root** by default — root `Dockerfile` + `railway.toml` handle that.
+   - **Or** set **Settings → Root Directory** to `job-ingestion` to use the Dockerfile inside that folder instead.
+4. Railway detects the Dockerfile and builds automatically.
 5. Add **Variables** in the Railway dashboard:
 
    | Variable | Required | Example |

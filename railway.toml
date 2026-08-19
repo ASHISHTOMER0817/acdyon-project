@@ -1,0 +1,11 @@
+# Railway builds from the repo root by default.
+# This Dockerfile lives at the root and copies job-ingestion/ into the image.
+# Alternative: set Settings → Root Directory to job-ingestion and use job-ingestion/railway.toml instead.
+
+[build]
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
