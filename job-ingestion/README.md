@@ -80,3 +80,30 @@ docker compose up streamlit
 ```
 
 Flask profile: `docker compose --profile api up flask`
+
+## Deploy on Railway
+
+1. Push this repo to GitHub (`ASHISHTOMER0817/acdyon-project`).
+2. Go to [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo**.
+3. Select the repo, then open **Settings → Root Directory** and set:
+   ```
+   job-ingestion
+   ```
+4. Railway detects `Dockerfile` + `railway.toml` and builds automatically.
+5. Add **Variables** in the Railway dashboard:
+
+   | Variable | Required | Example |
+   |---|---|---|
+   | `GEMINI_API_KEY` | Yes | your Google AI key |
+   | `FIRECRAWL_API_KEY` | No | Firecrawl key (optional) |
+   | `DEFAULT_SOURCE_URL` | No | `https://remoteok.com/api` |
+   | `DEFAULT_SOURCE_NAME` | No | `remoteok` |
+   | `GEMINI_MODEL` | No | `gemini-3.6-flash` |
+
+6. **Settings → Networking → Generate Domain** to get your public URL.
+7. Open the URL in incognito and click **Run ingest**.
+
+**Notes for Railway:**
+- Selenium fallback is **not** available in the container (no Chrome). Use public JSON/RSS URLs like RemoteOK.
+- Job objects live in **process memory** — they reset if the service redeploys or sleeps.
+- Do **not** commit `.env`; set secrets only in Railway Variables.

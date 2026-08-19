@@ -1,0 +1,10 @@
+# Railway service config.
+# In the Railway dashboard set Root Directory to: job-ingestion
+
+[build]
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
